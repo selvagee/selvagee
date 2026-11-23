@@ -1,0 +1,16 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports: ["127.0.0.1:5672:5672", "127.0.0.1:15672:15672"]
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: iot
+      MYSQL_USER: iot
+      MYSQL_PASSWORD: iot
+      MYSQL_ROOT_PASSWORD: demo-root
+    ports: ["127.0.0.1:3306:3306"]
+    volumes: ["./schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro"]
+  redis:
+    image: redis:7-alpine
+    ports: ["127.0.0.1:6379:6379"]
