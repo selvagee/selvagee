@@ -1,0 +1,30 @@
+name: Go RTSP worker checks
+on:
+  push:
+    paths:
+      - 'demos/go-rtsp-worker/**'
+      - '.github/workflows/go-rtsp-worker.yml'
+  pull_request:
+    paths:
+      - 'demos/go-rtsp-worker/**'
+      - '.github/workflows/go-rtsp-worker.yml'
+permissions:
+  contents: read
+jobs:
+  go-checks:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: demos/go-rtsp-worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: demos/go-rtsp-worker/go.mod
+          cache-dependency-path: demos/go-rtsp-worker/go.mod
+      - name: Unit tests with race detector
+        run: go test -race -count=1 ./...
+      - name: Static checks
+        run: go vet ./...
+      - name: Build executable
+        run: go build ./cmd/rtsp-worker
