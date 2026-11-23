@@ -1,0 +1,26 @@
+name: Node IoT receiver checks
+on:
+  push:
+    paths:
+      - 'demos/node-iot-event-receiver/**'
+      - '.github/workflows/node-iot-receiver.yml'
+  pull_request:
+    paths:
+      - 'demos/node-iot-event-receiver/**'
+      - '.github/workflows/node-iot-receiver.yml'
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: demos/node-iot-event-receiver
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install
+      - run: npm test
+      - run: node --check src/server.js && node --check src/worker.js
