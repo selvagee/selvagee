@@ -1,0 +1,26 @@
+name: Python IoT operations assistant checks
+on:
+  push:
+    paths:
+      - 'demos/python-iot-ops-assistant/**'
+      - '.github/workflows/python-iot-ops.yml'
+  pull_request:
+    paths:
+      - 'demos/python-iot-ops-assistant/**'
+      - '.github/workflows/python-iot-ops.yml'
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: demos/python-iot-ops-assistant
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - run: pytest -q
+      - run: python -m compileall -q app
