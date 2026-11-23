@@ -43,3 +43,20 @@ flowchart LR
 
 ## License
 MIT; see LICENSE.
+
+## Milestone 4: synthetic RTSP integration test (manual)
+
+The repository now includes a Docker Compose RTSP server and an integration-test script. The script generates a synthetic test-pattern stream with FFmpeg, publishes it over RTSP, runs the Go worker, checks for recorded MP4 segments using ffprobe, and queries the metrics endpoint.
+
+Prerequisites: Docker Compose, Go, FFmpeg (with libx264), ffprobe, curl and Bash. Ensure ports **8554** and **19090** are free.
+
+```bash
+cd demos/go-rtsp-worker
+bash scripts/integration-test.sh
+```
+
+**Verification status:** This end-to-end script has been added but has **not yet been executed in the connected GitHub environment**. Its success depends on local Docker/FFmpeg setup. GitHub Actions runs Go unit tests, race detection, static analysis and build; it does not currently run the Docker integration test.
+
+### Observability limits
+
+`/metrics` exposes a simple active-worker gauge and cumulative retry counter. The gauge reflects the worker's requested process state, not an independently verified video signal. Future work should add last-frame timestamps, segment-write checks, per-camera status and Prometheus labels with bounded cardinality.
